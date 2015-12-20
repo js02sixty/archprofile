@@ -76,9 +76,18 @@
 *color7:                S_base2
 *color15:               S_base3
 
+!! RXvt-Unicode
 !!Xft.antialias: true
 URxvt.scrollBar: false
 URxvt*.transparent: true
 URxvt*.shading: 20
 !!URxvt.font: xft:monaco:size=9
 URxvt.font: xft:source code pro:medium:size=9
+
+URxvt.perl-ext-common:      default,url-select,keyboard-select,selection-to-clipboard
+URxvt.url-select.launcher:  firefox
+URxvt.url-select.underline: true
+URxvt.keysym.M-u:           perl:url-select:select_next
+URxvt.keysym.M-Escape:      perl:keyboard-select:activate
+URxvt.keysym.M-s:           perl:keyboard-select:search
+
