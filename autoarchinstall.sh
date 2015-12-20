@@ -18,8 +18,8 @@ parted --script /dev/sda set 2 lvm on
 pvcreate /dev/sda2
 vgcreate vg_os /dev/sda2
 lvcreate vg_os -n lv_swap -L 4G
-lvcreate vg_os -n lv_root -L 8G
-lvcreate vg_os -n lv_home -l 100%FREE
+lvcreate vg_os -n lv_root -L 20G
+#lvcreate vg_os -n lv_home -l 100%FREE
 
 mkswap /dev/vg_os/lv_swap
 swapon /dev/vg_os/lv_swap
@@ -27,12 +27,13 @@ swapon /dev/vg_os/lv_swap
 mkfs.vfat -F32 /dev/sda1
 mkfs.ext4 /dev/vg_os/lv_root
 mkfs.ext4 /dev/vg_os/lv_home
+mkfs.xfs /dev/sdb
 
 mount /dev/vg_os/lv_root /mnt
 mkdir -p /mnt/boot
 mount /dev/sda1 /mnt/boot
 mkdir -p /mnt/home
-mount /dev/vg_os/lv_home /mnt/home
+mount /dev/sdb /mnt/home
 
 pacstrap -i --noconfirm /mnt base base-devel
 
@@ -74,4 +75,7 @@ arch-chroot /mnt systemctl enable NetworkManager
 arch-chroot /mnt hostnamectl set-hostname $hname
 arch-chroot /mnt useradd -m -G wheel -s /bin/bash $newuser
 arch-crhoot /mnt echo $newuser:$newpw | chpasswd
-#reboot
+
+sed '/^#.* wheel ALL=(ALL) NOPASSWD: ALL/s/^#//' -i /mnt/etc/sudoers
+
+reboot
