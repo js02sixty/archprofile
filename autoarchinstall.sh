@@ -18,7 +18,7 @@ parted --script /dev/sda set 2 lvm on
 pvcreate /dev/sda2
 vgcreate vg_os /dev/sda2
 lvcreate vg_os -n lv_swap -L 4G
-lvcreate vg_os -n lv_root -L 20G
+lvcreate vg_os -n lv_root -l 100%FREE
 #lvcreate vg_os -n lv_home -l 100%FREE
 
 mkswap /dev/vg_os/lv_swap
@@ -35,7 +35,7 @@ mount /dev/sda1 /mnt/boot
 mkdir -p /mnt/home
 mount /dev/sdb /mnt/home
 
-pacstrap -i --noconfirm /mnt base base-devel
+pacstrap -i /mnt base base-devel
 
 genfstab -U /mnt > /mnt/etc/fstab
 echo en_US.UTF-8 UTF-8 >> /mnt/etc/locale.gen
@@ -50,7 +50,7 @@ arch-chroot /mnt mkinitcpio -p linux
 arch-chroot /mnt pacman -S --noconfirm \
 	dosfstools \
 	networkmanager \
-	vim \ 
+	vim \
 	xorg-server \
 	xorg-server-utils \
 	xorg-xinit \
@@ -78,4 +78,4 @@ arch-crhoot /mnt echo $newuser:$newpw | chpasswd
 
 sed '/^#.* wheel ALL=(ALL) NOPASSWD: ALL/s/^#//' -i /mnt/etc/sudoers
 
-reboot
+#reboot
