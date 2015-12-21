@@ -176,4 +176,4 @@ client.urgent #d33682 #d33682 #fdf6e3 #dc322f
 #exec --no-startup-id dzen2
 
 # Wallpaper
-exec --no-startup-id feh --bg-fill ~/Pictures/papers.co-mj72-star-trail-tree-space-night-nature-1600x900.jpg
+exec --no-startup-id feh --bg-fill ~/Downloads/JKDsRHa.png
