@@ -41,21 +41,25 @@ genfstab -U /mnt > /mnt/etc/fstab
 echo en_US.UTF-8 UTF-8 >> /mnt/etc/locale.gen
 echo LANG=en_US.UTF-8 > /mnt/etc/locale.conf
 sed '/^HOOKS/s/block/block lvm2/' -i /mnt/etc/mkinitcpio.conf
+echo $hname > /mnt/etc/hostname
 
-##arch-chroot /mnt /bin/bash
 arch-chroot /mnt locale-gen
 arch-chroot /mnt ln -sf /usr/share/zoneinfo/US/Eastern /etc/localtime
 arch-chroot /mnt hwclock --systohc --utc
 arch-chroot /mnt mkinitcpio -p linux
 arch-chroot /mnt pacman -S --noconfirm \
 	dosfstools \
+	virtualbox-guest-modules \
+	virtualbox-guest-utils \
 	networkmanager \
 	vim \
 	xorg-server \
 	xorg-server-utils \
 	xorg-xinit \
 	rxvt-unicode \
-	urxvt-perls
+	urxvt-perls \
+#	plasma-meta \
+	firefox
 
 arch-chroot /mnt bootctl --path=/boot install
 
@@ -72,10 +76,9 @@ echo "default arch">> $ldrcfg
 #arch-chroot /mnt timedatectl set-ntp true
 arch-chroot /mnt timedatectl set-timezone America/New_York
 arch-chroot /mnt systemctl enable NetworkManager
-arch-chroot /mnt hostnamectl set-hostname $hname
 arch-chroot /mnt useradd -m -G wheel -s /bin/bash $newuser
-arch-crhoot /mnt echo $newuser:$newpw | chpasswd
-
-sed '/^#.* wheel ALL=(ALL) NOPASSWD: ALL/s/^#//' -i /mnt/etc/sudoers
+arch-chroot /mnt echo $newname:$newpw | chpasswd
+arch-chroot /mnt echo root:Security#321 | chpasswd
+sed '/^# %wheel ALL=(ALL) NOPASSWD: ALL/s/^#//' -i /mnt/etc/sudoers
 
 #reboot
